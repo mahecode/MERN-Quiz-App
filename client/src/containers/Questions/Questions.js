@@ -8,7 +8,7 @@ class Questions extends Component {
         data: '',
     }
     componentDidMount(){
-        axios.get('http://localhost:4000/question')
+        axios.get('https://murmuring-woodland-50627.herokuapp.com/question')
             .then( res => {
                 const { data } = res;
                 this.setState({data});
