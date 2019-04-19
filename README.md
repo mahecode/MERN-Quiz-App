@@ -1,4 +1,4 @@
-In this project directory you have to first all dependencies.
+In this project directory you have to first of all dependencies.
 
 ### `npm install`
 
