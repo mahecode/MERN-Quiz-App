@@ -10,7 +10,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Fab from '@material-ui/core/Fab';
 import SendIcon from '@material-ui/icons/SendRounded';
+import Dialog from '@material-ui/core/Dialog';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
 
+const Transition = (props)=>{
+  return <Slide direction="up" {...props} />;
+}
 
 
 const styles = theme => ({
@@ -34,9 +40,17 @@ class PaperSheet extends Component {
     selectedAnswer: '',
     count: 0,
     i: 0,
+    open: false,
   }
 
  
+  handleClickOpen = () => {
+    this.setState({ open: true });
+  };
+
+  handleClose = () => {
+    this.setState({ open: false , count: 0});
+  };
 
   handleChange = (event) =>{
     this.setState({selectedAnswer: event.target.value});
@@ -52,18 +66,16 @@ class PaperSheet extends Component {
     this.setState((prevState, props)=> ({
       i: prevState.i + 1
     }))
-    // console.log(this.state.count);
-    console.log(this.state.i)
   }
 
 
   render(){
     const { classes } = this.props;
 
-    console.log(this.props.questions)
     let quesData = null;
     let options = null;
     let optionsElement = null;
+    let correctAnswer = null;
     if(this.state.i < 7){
       quesData = this.props.questions[this.state.i].question;
       options = this.props.questions[this.state.i].options.map( element => {
@@ -75,9 +87,24 @@ class PaperSheet extends Component {
         )
       })
     } else{
-      this.setState({i: 0})
+     this.setState({i: 0, open: true})
     }
-    
+
+
+    let dialog = (<Dialog
+          open={this.state.open}
+          TransitionComponent={Transition}
+          keepMounted
+          onClose={this.handleClose}
+          aria-labelledby="alert-dialog-slide-title"
+          aria-describedby="alert-dialog-slide-description"
+        >
+        <DialogTitle id="alert-dialog-slide-title">
+
+            {this.state.count} / 7 correct answers
+          </DialogTitle>
+        </Dialog>
+        );
 
     return (
       <div>
@@ -92,11 +119,13 @@ class PaperSheet extends Component {
           <Typography variant="h5" component="h3">
             {quesData}
           </Typography>
+          {dialog}
           <FormControl component="fieldset" className={classes.formControl}>
               <RadioGroup
                   className={classes.group}
                   onChange={this.handleChange}>
                 {optionsElement}
+                {correctAnswer}
               </RadioGroup>
               <Fab onClick={this.handleButton} color="secondary" size="large" aria-label="Add">
             <SendIcon />
